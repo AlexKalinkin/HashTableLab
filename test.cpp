@@ -23,6 +23,8 @@ TEST(HashTableTest, CheckBigInsert) {
     Value a("Alex", 20);
     Value b("Bob", 40);
     for (int i = 0; i < 100000; i++) {
+        // fsadfs
+        // fsadfs
         table.insert(rand_string(10), a);
     }
     EXPECT_EQ(table.size(), 100000);
@@ -49,7 +51,7 @@ TEST(HashTableTest, CheckInsertAndErase) {
 TEST(HashTableTest, CheckContains) {
     HashTable table;
     Value a("Alex", 20);
-    EXPECT_FALSE(table.contains("ad"));
+//    EXPECT_FALSE(table.contains("ad"));
     table.insert("minca", a);
     EXPECT_TRUE(table.contains("minca"));
 }
@@ -67,7 +69,7 @@ TEST(HashTableTest, CheckSwap) {
     table2.insert("qasdasd", b);
     table1.swap(table2);
     EXPECT_TRUE(table1 != table2);
-
+    // check keys and values
 }
 
 TEST(HashTableTest, CheckSwapEmptyTables) {
@@ -75,12 +77,15 @@ TEST(HashTableTest, CheckSwapEmptyTables) {
     HashTable table2;
     table1.swap(table2);
     EXPECT_TRUE(table1 == table2);
+    // size == 0
 }
+
 TEST(HashTableTest, CheckAssignEmptyTables) {
     HashTable table1;
     HashTable table2;
     table1 = table2;
     EXPECT_TRUE(table1 == table2);
+    //size
 }
 
 TEST(HashTableTest, CheckAssing) {
@@ -99,7 +104,7 @@ TEST(HashTableTest, CheckAssing) {
     EXPECT_TRUE(table1 == table2);
 }
 
-TEST(HashTableTest, CheckErasre) {
+TEST(HashTableTest, CheckErase) {
     HashTable table1;
     Value a("Alex", 20);
     Value b("Bob", 40);
@@ -165,6 +170,10 @@ TEST(HashTableTest, CheckEqualsNotEmptyTables) {
     HashTable table2;
     Value a("Alex", 20);
     Value b("Bob", 40);
+
+    // table a: add 10 elements, remove 9
+    // table b: add 1 element (same as in a)
+    // compare content and ==
 
     table1.insert("aadass", a);
     table1.insert("dsaddassf", b);

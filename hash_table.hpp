@@ -71,7 +71,7 @@ private:
     struct Bucket {
         Bucket(const Key k, const Value v, bool d = false) : key(k), value(v), deleted(d) {}
         const Key key;
-        const Value value;
+        Value value;
         bool deleted = false;
     };
     const Bucket** bucket;
