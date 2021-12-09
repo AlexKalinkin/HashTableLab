@@ -42,8 +42,6 @@ public:
 
     // Returns a link to value by key
     Value& at(const Key& k);
-
-    // Returns a constant link to value by key
     const Value& at(const Key& k) const;
 
     // Returns the number of non-empty buckets in the table
@@ -69,8 +67,8 @@ private:
     const static int second_prime = 13;
 
     struct Bucket {
-        Bucket(const Key k, const Value v, bool d = false) : key(k), value(v), deleted(d) {}
-        const Key key;
+        Bucket(const Key& k, const Value& v, bool d = false) : key(k), value(v), deleted(d) {}
+        Key key;
         Value value;
         bool deleted = false;
     };
