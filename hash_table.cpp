@@ -212,7 +212,7 @@ bool operator==(const HashTable& a, const HashTable& b) {
     if (a.size_ != b.size_) return false;
 
     for (int i = 0; i < a.capacity_; i++) {
-        if (a.bucket[i] == nullptr) continue;
+        if (a.bucket[i] == nullptr || a.bucket[i]->deleted == true) continue;
         int index = b.search(a.bucket[i]->key);
         if (index == -1) return false;
         if (a.bucket[i]->value != b.bucket[index]->value) return false;
