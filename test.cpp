@@ -1,34 +1,8 @@
 #include <gtest/gtest.h>
 #include "hash_table.hpp"
-
 #include <ctime>
 #include <iostream>
 
-std::string rand_string(const int len) {
-    char alphabet[] =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
-    std::string rand_string;
-
-    for (int i = 0; i < len; i++) {
-        rand_string += alphabet[rand() % (sizeof(alphabet) - 1)];
-    }
-
-    return rand_string;
-}
-
-TEST(HashTableTest, CheckBigInsert) {
-    HashTable table;
-    Value a("Alex", 20);
-    Value b("Bob", 40);
-    for (int i = 0; i < 100000; i++) {
-        // fsadfs
-        // fsadfs
-        table.insert(rand_string(10), a);
-    }
-    EXPECT_EQ(table.size(), 100000);
-}
 
 TEST(HashTableTest, CheckInsertEqualKeys) {
     HashTable table;
@@ -51,7 +25,6 @@ TEST(HashTableTest, CheckInsertAndErase) {
 TEST(HashTableTest, CheckContains) {
     HashTable table;
     Value a("Alex", 20);
-//    EXPECT_FALSE(table.contains("ad"));
     table.insert("minca", a);
     EXPECT_TRUE(table.contains("minca"));
 }
@@ -61,15 +34,12 @@ TEST(HashTableTest, CheckSwap) {
     HashTable table2;
     Value a("Alex", 20);
     Value b("Bob", 40);
-    table1.insert("adqsdasd", a);
-    table1.insert("as", b);
-    table1.insert("asdadasd", a);
-    table1.insert("asddaasd", b);
-    table2.insert("aqsdaasd", a);
-    table2.insert("qasdasd", b);
+    table1.insert("adqsdasd", b);
+    table1.insert("as", a);
+    table2.insert("as", a);
+    table2.insert("adqsdasd", b);
     table1.swap(table2);
-    EXPECT_TRUE(table1 != table2);
-    // check keys and values
+    EXPECT_TRUE(table1 == table2);
 }
 
 TEST(HashTableTest, CheckSwapEmptyTables) {
@@ -77,7 +47,7 @@ TEST(HashTableTest, CheckSwapEmptyTables) {
     HashTable table2;
     table1.swap(table2);
     EXPECT_TRUE(table1 == table2);
-    // size == 0
+    EXPECT_TRUE(table1.size() == 0 && table1.size() == 0);
 }
 
 TEST(HashTableTest, CheckAssignEmptyTables) {
@@ -85,7 +55,7 @@ TEST(HashTableTest, CheckAssignEmptyTables) {
     HashTable table2;
     table1 = table2;
     EXPECT_TRUE(table1 == table2);
-    //size
+    EXPECT_TRUE(table1.size() == 0 && table1.size() == 0);
 }
 
 TEST(HashTableTest, CheckAssing) {
@@ -169,17 +139,29 @@ TEST(HashTableTest, CheckEqualsNotEmptyTables) {
     HashTable table1;
     HashTable table2;
     Value a("Alex", 20);
-    Value b("Bob", 40);
 
-    // table a: add 10 elements, remove 9
-    // table b: add 1 element (same as in a)
-    // compare content and ==
-
+    table1.insert("1dass", a);
+    table1.insert("311as", a);
+    table1.insert("41bdb", a);
     table1.insert("aadass", a);
-    table1.insert("dsaddassf", b);
-    table2.insert("aadass", a);
-    table2.insert("dsaddassf", b);
+    table1.insert("ds7dassf", a);
+    table1.insert("aad6ass", a);
+    table1.insert("dsad324dassf", a);
+    table1.insert("dsadd4assf", a);
+    table1.insert("aad3as2s", a);
+    table1.insert("dsadd7assf", a);
 
+    table1.erase("311as");
+    table1.erase("41bdb");
+    table1.erase("aadass");
+    table1.erase("ds7dassf");
+    table1.erase("aad6ass");
+    table1.erase("dsad324dassf");
+    table1.erase("dsadd4assf");
+    table1.erase("aad3as2s");
+    table1.erase("dsadd7assf");
+
+    table2.insert("1dass", a);
     EXPECT_TRUE(table1 == table2);
 }
 
@@ -188,6 +170,7 @@ TEST(HashTableTest, CheckEqualsEmptyTables) {
     HashTable table1;
     HashTable table2;
     EXPECT_TRUE(table1 == table2);
+    EXPECT_TRUE(table1.size() == 0 && table1.size() == 0);
 }
 
 TEST(HashTableTest, CheckNotEquals) {
@@ -203,4 +186,3 @@ TEST(HashTableTest, CheckNotEquals) {
 
     EXPECT_TRUE(table1 != table2);
 }
-
