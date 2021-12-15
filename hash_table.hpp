@@ -27,10 +27,12 @@ public:
     // Сlears buckets in the table 
     void clear();
 
-    // Deletes bucket by key in the table
+    // Retruns true if found a bucket by key and deleted it 
+    // Retruns false else 
     bool erase(const Key& k);
 
-    // Inserts v in the table 
+    // Returns true if inserted v in the table 
+    // Returns false if there is a bucket with the same key
     bool insert(const Key& k, const Value& v);
 
     // Returns true if the table contains a bucket with such a key
@@ -41,6 +43,7 @@ public:
     Value& operator[](const Key& k);
 
     // Returns a link to value by key
+    // If not found throws runtime_error
     Value& at(const Key& k);
     const Value& at(const Key& k) const;
 
@@ -51,17 +54,17 @@ public:
     // Returns false if the table has at least one initialized bucket
     bool empty() const;
 
-    // Returns true if tables are equal
+    // Returns true if tables have the same buckets 
     // Otherwise returns false
     friend bool operator==(const HashTable& a, const HashTable& b);
 
-    // Returns true if tables are not equal
-    // Otherwise returns false
+    // Returns false if tables have the same buckets 
+    // Otherwise returns true
     friend bool operator!=(const HashTable& a, const HashTable& b);
 
 private:
     int capacity_;
-    int size_;
+    int size_ = 0;
     const static int default_capacity = 4;
     const static int first_prime = 7;
     const static int second_prime = 13;
@@ -72,12 +75,15 @@ private:
         Value value;
         bool deleted = false;
     };
-    const Bucket** bucket;
+    Bucket** bucket;
 
-    int hash_function1(const Key& key) const;
-    int hash_function2(const Key& key) const;
+    unsigned hash_fun(const int prime_numder, const Key& key) const;
+    unsigned hash_function1(const Key& key) const;
+    unsigned hash_function2(const Key& key) const;
 
     void resize();
 
     int search(const Key& key) const;
-};
+
+    void add_bucket(const Key& k, const Value& v, unsigned hash1);
+};  
