@@ -186,3 +186,15 @@ TEST(HashTableTest, CheckNotEquals) {
 
     EXPECT_TRUE(table1 != table2);
 }
+
+TEST(HashTableTest, CheckEqualsTablesDifferentValue) {
+    HashTable table1;
+    HashTable table2;
+    Value a("Alex", 20);
+    Value b("Bob", 40);
+
+    table1.insert("aadass", a);
+    table2.insert("aadass", b);
+
+    EXPECT_FALSE(table1 == table2);
+}
