@@ -173,6 +173,7 @@ Value& HashTable::operator[](const Key& k) {
                 add_bucket(k, a, hash1);
                 bucket[hash1]->deleted = false;
             }
+            hash1 = (hash1 + hash2) % capacity_;
 
             return (bucket[hash1]->value);
         }
