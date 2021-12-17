@@ -27,19 +27,19 @@ public:
     // Сlears buckets in the table 
     void clear();
 
-    // Retruns true if found a bucket by key and deleted it 
+    // Retruns true if found a bucket_ by key and deleted it
     // Retruns false else 
     bool erase(const Key& k);
 
     // Returns true if inserted v in the table 
-    // Returns false if there is a bucket with the same key
+    // Returns false if there is a bucket_ with the same key
     bool insert(const Key& k, const Value& v);
 
-    // Returns true if the table contains a bucket with such a key
-    // Returns false if the table doesn't contain a bucket with such a key
+    // Returns true if the table contains a bucket_ with such a key
+    // Returns false if the table doesn't contain a bucket_ with such a key
     bool contains(const Key& k) const;
 
-    // Returns a link to value by key, but if there is no value for this key, a new bucket is created with name = "" and age = 0
+    // Returns a link to value by key, but if there is no value for this key, a new bucket_ is created with name = "" and age = 0
     Value& operator[](const Key& k);
 
     // Returns a link to value by key
@@ -51,7 +51,7 @@ public:
     size_t size() const;
 
     // Returns true if there are no initialized buckets in the table
-    // Returns false if the table has at least one initialized bucket
+    // Returns false if the table has at least one initialized bucket_
     bool empty() const;
 
     // Returns true if tables have the same buckets 
@@ -75,9 +75,9 @@ private:
         Value value;
         bool deleted;
     };
-    Bucket** bucket;
+    Bucket** bucket_;
 
-    unsigned hash_fun(int prime_numder, const Key& key) const;
+    unsigned hash_fun(int prime_number, const Key& key) const;
     unsigned hash_function1(const Key& key) const;
     unsigned hash_function2(const Key& key) const;
 
