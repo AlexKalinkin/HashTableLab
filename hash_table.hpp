@@ -19,6 +19,7 @@ public:
     HashTable& operator=(const HashTable& b);
 
     // Copies table b
+    // CR: specify that buckets are recreated
     HashTable(const HashTable& b);
 
     // Changes buckets with the same index of two tables 
@@ -27,19 +28,20 @@ public:
     // Сlears buckets in the table 
     void clear();
 
-    // Retruns true if found a bucket_ by key and deleted it
-    // Retruns false else 
+    // Returns true if found a bucket by key and deleted it
+    // Returns false else
     bool erase(const Key& k);
 
-    // Returns true if inserted v in the table 
-    // Returns false if there is a bucket_ with the same key
+    // Returns true if inserted v in the table
+    // CR: please also specify that old value will be replaced
+    // Returns false if there is a bucket with the same key
     bool insert(const Key& k, const Value& v);
 
-    // Returns true if the table contains a bucket_ with such a key
-    // Returns false if the table doesn't contain a bucket_ with such a key
+    // Returns true if the table contains a bucket with such a key
+    // Returns false if the table doesn't contain a bucket with such a key
     bool contains(const Key& k) const;
 
-    // Returns a link to value by key, but if there is no value for this key, a new bucket_ is created with name = "" and age = 0
+    // Returns a link to value by key, but if there is no value for this key, a new bucket is created with name = "" and age = 0
     Value& operator[](const Key& k);
 
     // Returns a link to value by key
@@ -51,9 +53,11 @@ public:
     size_t size() const;
 
     // Returns true if there are no initialized buckets in the table
-    // Returns false if the table has at least one initialized bucket_
+    // Returns false if the table has at least one initialized bucket
     bool empty() const;
 
+    // CR: what does 'same' mean? Does it mean that they have same address? or does it mean that they have same key and value?
+    // CR: please specify it here
     // Returns true if tables have the same buckets 
     // Otherwise returns false
     friend bool operator==(const HashTable& a, const HashTable& b);

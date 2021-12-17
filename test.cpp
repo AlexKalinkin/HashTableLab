@@ -3,6 +3,8 @@
 #include <ctime>
 #include <iostream>
 
+// CR: please also add tests for cases when one of the tables was resized and other did not.
+// CR: e.g. add into the first table 10 buckets, remove 9. add 1 bucket into the second table. compare tables
 
 TEST(HashTableTest, CheckInsertEqualKeys) {
     HashTable table;
@@ -47,7 +49,7 @@ TEST(HashTableTest, CheckSwapEmptyTables) {
     HashTable table2;
     table1.swap(table2);
     EXPECT_TRUE(table1 == table2);
-    EXPECT_TRUE(table1.size() == 0 && table1.size() == 0);
+    EXPECT_TRUE(table1.empty() && table2.empty());
 }
 
 TEST(HashTableTest, CheckAssignEmptyTables) {
@@ -55,7 +57,7 @@ TEST(HashTableTest, CheckAssignEmptyTables) {
     HashTable table2;
     table1 = table2;
     EXPECT_TRUE(table1 == table2);
-    EXPECT_TRUE(table1.size() == 0 && table1.size() == 0);
+    EXPECT_TRUE(table1.empty() && table2.empty());
 }
 
 TEST(HashTableTest, CheckAssing) {
@@ -132,7 +134,7 @@ TEST(HashTableTest, CheckSquareBrackets1) {
 TEST(HashTableTest, CheckSquareBrackets2) {
     HashTable table;
     std::string key = "nijd";
-    EXPECT_TRUE((table[key].name == "") && (table[key].age == 0));
+    EXPECT_TRUE((table[key].name.empty()) && (table[key].age == 0));
 }
 
 TEST(HashTableTest, CheckEqualsNotEmptyTables) {
@@ -170,7 +172,7 @@ TEST(HashTableTest, CheckEqualsEmptyTables) {
     HashTable table1;
     HashTable table2;
     EXPECT_TRUE(table1 == table2);
-    EXPECT_TRUE(table1.size() == 0 && table1.size() == 0);
+    EXPECT_TRUE(table1.empty() && table2.empty());
 }
 
 TEST(HashTableTest, CheckNotEquals) {

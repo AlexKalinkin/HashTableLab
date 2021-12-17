@@ -11,13 +11,13 @@ unsigned HashTable::hash_fun(const int prime_number, const Key& k) const {
 }
 
 unsigned HashTable::hash_function1(const Key& k) const {
-    unsigned hash = hash_fun(FIRST_PRIME, k);
-    return hash % capacity_;
+    return hash_fun(FIRST_PRIME, k);
 }
 
 unsigned HashTable::hash_function2(const Key& k) const {
     unsigned hash = hash_fun(SECOND_PRIME, k);
     if (hash % 2 != 0) return hash;
+    // CR: we have a problem when hash = capacity - 1
     return hash + 1;
 }
 
@@ -50,13 +50,14 @@ void HashTable::resize() {
         if (new_bucket[i] != nullptr && !new_bucket[i]->deleted) insert(new_bucket[i]->key, new_bucket[i]->value);
     }
 
+    // CR: you can do it in previous for loop
     for (int i = 0; i < capacity_ / 2; i++)
         if (new_bucket[i]) delete new_bucket[i];
 
     delete[] new_bucket;
 }
 
-HashTable::HashTable() : capacity_(DEFAULT_CAPACITY), bucket_(new Bucket* [DEFAULT_CAPACITY]()) {}
+HashTable::HashTable() : capacity_(DEFAULT_CAPACITY), size_(), bucket_(new Bucket* [DEFAULT_CAPACITY]()) {}
 
 HashTable::~HashTable() {
     for (int i = 0; i < capacity_; i++) {
@@ -84,6 +85,7 @@ HashTable& HashTable::operator=(const HashTable& b) {
     return *this;
 }
 
+// CR: there are no tests for this method
 HashTable::HashTable(const HashTable& b) : capacity_(b.capacity_), size_(b.size_), bucket_(new Bucket* [b.capacity_]()) {
     for (int i = 0; i < capacity_; i++) {
         if (b.bucket_[i] != nullptr) {
@@ -138,10 +140,14 @@ bool HashTable::insert(const Key& k, const Value& v) {
             return true;
         }
 
+        // CR: seems incorrect. consider following operations:
+        // CR: 1. insert foo with hash=h1 2. insert bar with hash=h1. it is inserted to (h1 + hash2) % capacity
+        // CR: 3. delete foo. now in position h1 we have bucket with deleted=true
+        // CR: 4. insert bar again. it will be inserted instead of foo (and now we have two foo entries)
+        // CR: please fix it and write a test
         else if (bucket_[hash1]->deleted) {
             delete bucket_[hash1];
             add_bucket(k, v, hash1);
-            bucket_[hash1]->deleted = false;
             return true;
         }
 
@@ -168,6 +174,7 @@ Value& HashTable::operator[](const Key& k) {
         for (int i = 0; i < capacity_;) {
             if (bucket_[hash1] == nullptr) add_bucket(k, a, hash1);
 
+            // CR: same problem as in insert
             else if (bucket_[hash1]->deleted) {
                 delete bucket_[hash1];
                 add_bucket(k, a, hash1);
