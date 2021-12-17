@@ -2,7 +2,7 @@
 typedef std::string Key;
 
 struct Value {
-    Value(std::string n, unsigned a = 0) : name(n), age(a) {}
+    explicit Value(const std::string& n, unsigned a = 0) : name(n), age(a) {}
     std::string name;
     unsigned age;
 };
@@ -64,20 +64,20 @@ public:
 
 private:
     int capacity_;
-    int size_ = 0;
-    const static int default_capacity = 4;
-    const static int first_prime = 7;
-    const static int second_prime = 13;
+    int size_;
+    const static int DEFAULT_CAPACITY = 4;
+    const static int FIRST_PRIME = 7;
+    const static int SECOND_PRIME = 13;
 
     struct Bucket {
         Bucket(const Key& k, const Value& v, bool d = false) : key(k), value(v), deleted(d) {}
         Key key;
         Value value;
-        bool deleted = false;
+        bool deleted;
     };
     Bucket** bucket;
 
-    unsigned hash_fun(const int prime_numder, const Key& key) const;
+    unsigned hash_fun(int prime_numder, const Key& key) const;
     unsigned hash_function1(const Key& key) const;
     unsigned hash_function2(const Key& key) const;
 

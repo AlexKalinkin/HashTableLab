@@ -1,5 +1,4 @@
 ﻿#include "hash_table.hpp"
-#include <iostream>
 
 unsigned HashTable::hash_fun(const int prime_number, const Key& k) const {
     size_t len = k.length();
@@ -12,12 +11,12 @@ unsigned HashTable::hash_fun(const int prime_number, const Key& k) const {
 }
 
 unsigned HashTable::hash_function1(const Key& k) const {
-    unsigned hash = hash_fun(first_prime, k);
+    unsigned hash = hash_fun(FIRST_PRIME, k);
     return hash % capacity_;
 }
 
 unsigned HashTable::hash_function2(const Key& k) const {
-    unsigned hash = hash_fun(second_prime, k);
+    unsigned hash = hash_fun(SECOND_PRIME, k);
     if (hash % 2 != 0) return hash;
     return hash + 1;
 }
@@ -27,7 +26,7 @@ int HashTable::search(const Key& k) const {
     unsigned hash2 = hash_function2(k);
     for (int i = 0; i < capacity_; i++) {
         if (bucket[hash1] != nullptr) {
-            if (!bucket[hash1]->deleted && bucket[hash1]->key == k) return hash1;
+            if (!bucket[hash1]->deleted && bucket[hash1]->key == k) return int(hash1);
         }
         else return -1;
         hash1 = (hash1 + hash2) % capacity_;
@@ -48,7 +47,7 @@ void HashTable::resize() {
     size_ = 0;
     std::swap(bucket, new_bucket);
     for (int i = 0; i < capacity_ / 2; i++) {
-        if (new_bucket[i] != nullptr && new_bucket[i]->deleted == false) insert(new_bucket[i]->key, new_bucket[i]->value);
+        if (new_bucket[i] != nullptr && !new_bucket[i]->deleted) insert(new_bucket[i]->key, new_bucket[i]->value);
     }
 
     for (int i = 0; i < capacity_ / 2; i++)
@@ -57,7 +56,7 @@ void HashTable::resize() {
     delete[] new_bucket;
 }
 
-HashTable::HashTable() : capacity_(default_capacity), bucket(new Bucket* [default_capacity]()) {}
+HashTable::HashTable() : capacity_(DEFAULT_CAPACITY), bucket(new Bucket* [DEFAULT_CAPACITY]()) {}
 
 HashTable::~HashTable() {
     for (int i = 0; i < capacity_; i++) {
@@ -124,6 +123,7 @@ bool HashTable::erase(const Key& k) {
         else return false;
         hash1 = (hash1 + hash2) % capacity_;
     }
+    assert(false);
 }
 
 bool HashTable::insert(const Key& k, const Value& v) {
@@ -151,6 +151,7 @@ bool HashTable::insert(const Key& k, const Value& v) {
         }
         hash1 = (hash1 + hash2) % capacity_;
     }
+    assert(false);
 }
 
 bool HashTable::contains(const Key& k) const {
@@ -163,9 +164,8 @@ Value& HashTable::operator[](const Key& k) {
     if (index == -1) {
         Value a("", 0);
         unsigned hash1 = hash_function1(k);
-        unsigned hash2 = hash_function2(k);
 
-        for (int i = 0; i < capacity_; i++) {
+        for (int i = 0; i < capacity_;) {
             if (bucket[hash1] == nullptr) add_bucket(k, a, hash1);
 
             else if (bucket[hash1]->deleted) {
@@ -174,7 +174,6 @@ Value& HashTable::operator[](const Key& k) {
                 bucket[hash1]->deleted = false;
             }
             return (bucket[hash1]->value);
-            hash1 = (hash1 + hash2) % capacity_;
 
         }
     }
@@ -213,7 +212,7 @@ bool operator==(const HashTable& a, const HashTable& b) {
     if (a.size_ != b.size_) return false;
 
     for (int i = 0; i < a.capacity_; i++) {
-        if (a.bucket[i] == nullptr || a.bucket[i]->deleted == true) continue;
+        if (a.bucket[i] == nullptr || a.bucket[i]->deleted) continue;
         int index = b.search(a.bucket[i]->key);
         if (index == -1) return false;
         if (a.bucket[i]->value != b.bucket[index]->value) return false;
