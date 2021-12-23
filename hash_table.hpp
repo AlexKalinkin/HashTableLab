@@ -18,8 +18,7 @@ public:
     // Assigns one table to another table
     HashTable& operator=(const HashTable& b);
 
-    // Copies table b
-    // CR: specify that buckets are recreated
+    // Copies table b, buckets are recreated
     HashTable(const HashTable& b);
 
     // Changes buckets with the same index of two tables 
@@ -32,9 +31,8 @@ public:
     // Returns false else
     bool erase(const Key& k);
 
-    // Returns true if inserted v in the table
-    // CR: please also specify that old value will be replaced
-    // Returns false if there is a bucket with the same key
+    // Returns true if inserted v in the table, 
+    // Returns false if there is a bucket with the same key, old value will be replaced
     bool insert(const Key& k, const Value& v);
 
     // Returns true if the table contains a bucket with such a key
@@ -56,13 +54,11 @@ public:
     // Returns false if the table has at least one initialized bucket
     bool empty() const;
 
-    // CR: what does 'same' mean? Does it mean that they have same address? or does it mean that they have same key and value?
-    // CR: please specify it here
-    // Returns true if tables have the same buckets 
+    // Returns true if tables have the same buckets (have the same key and value, no matter what order) 
     // Otherwise returns false
     friend bool operator==(const HashTable& a, const HashTable& b);
 
-    // Returns false if tables have the same buckets 
+    // Returns false if tables have the same buckets (have the same key and value, no matter what order) 
     // Otherwise returns true
     friend bool operator!=(const HashTable& a, const HashTable& b);
 
@@ -72,7 +68,7 @@ private:
     const static int DEFAULT_CAPACITY = 4;
     const static int FIRST_PRIME = 7;
     const static int SECOND_PRIME = 13;
-
+    int size_all_non_nullptr = 0;
     struct Bucket {
         Bucket(const Key& k, const Value& v, bool d = false) : key(k), value(v), deleted(d) {}
         Key key;
