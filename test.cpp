@@ -3,9 +3,16 @@
 #include <ctime>
 #include <iostream>
 
-// CR: please also add tests for cases when one of the tables was resized and other did not.
-// CR: e.g. add into the first table 10 buckets, remove 9. add 1 bucket into the second table. compare tables
+TEST(HashTableTest, CheckInsertEqualHash) {
+    HashTable table;
+    Value a("Alex", 20);
+    table.insert("2f", a);
+    table.insert("qf", a);
+    table.erase("2f");
+    table.insert("qf", a);
 
+    EXPECT_EQ(table.size(), 1);
+}
 TEST(HashTableTest, CheckInsertEqualKeys) {
     HashTable table;
     Value a("Alex", 20);
@@ -181,10 +188,28 @@ TEST(HashTableTest, CheckNotEquals) {
     Value a("Alex", 20);
     Value b("Bob", 40);
 
+    table1.insert("1dass", a);
+    table1.insert("311as", a);
+    table1.insert("41bdb", a);
     table1.insert("aadass", a);
-    table1.insert("dsaddassf", b);
-    table2.insert("aadas1s", a);
-    table2.insert("dsaddassf", b);
+    table1.insert("ds7dassf", a);
+    table1.insert("aad6ass", a);
+    table1.insert("dsad324dassf", a);
+    table1.insert("dsadd4assf", a);
+    table1.insert("aad3as2s", a);
+    table1.insert("dsadd7assf", a);
+
+    table1.erase("311as");
+    table1.erase("41bdb");
+    table1.erase("aadass");
+    table1.erase("ds7dassf");
+    table1.erase("aad6ass");
+    table1.erase("dsad324dassf");
+    table1.erase("dsadd4assf");
+    table1.erase("aad3as2s");
+    table1.erase("dsadd7assf");
+
+    table2.insert("12dass", a);
 
     EXPECT_TRUE(table1 != table2);
 }
@@ -199,4 +224,17 @@ TEST(HashTableTest, CheckEqualsTablesDifferentValue) {
     table2.insert("aadass", b);
 
     EXPECT_FALSE(table1 == table2);
+}
+
+TEST(HashTableTest, CheckCopyCtor) {
+    HashTable table1;
+    Value a("Alex", 20);
+    Value b("Bob", 40);
+    table1.insert("sasc", a);
+    table1.insert("qcpf", b);
+    table1.insert("1q11fq2", b);
+
+    EXPECT_EQ(table1.size(), 3);
+    HashTable table2 = table1;
+    EXPECT_TRUE(table1 == table2);
 }
