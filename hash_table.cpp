@@ -1,5 +1,5 @@
 ﻿#include "hash_table.hpp"
-
+#include <cassert> 
 unsigned HashTable::hash_fun(const int prime_number, const Key& k) const {
     size_t len = k.length();
     unsigned hash = 0;
@@ -18,6 +18,8 @@ unsigned HashTable::hash_function2(const Key& k) const {
     unsigned hash = hash_fun(SECOND_PRIME, k);
     if (hash % 2 != 0) return hash;
     // CR: we have a problem when hash = capacity - 1
+    
+    // Ans: No problem because capacity is an even number
     return hash + 1;
 }
 
@@ -29,7 +31,7 @@ int HashTable::search(const Key& k) const {
             if (!bucket_[hash1]->deleted && bucket_[hash1]->key == k) return int(hash1);
         }
         else return -1;
-        hash1 = (hash1 + hash2) % capacity_;
+        hash1 = (hash1 + hash2) % capacity_;    
     }
     return -1;
 }
@@ -48,11 +50,9 @@ void HashTable::resize() {
     std::swap(bucket_, new_bucket);
     for (int i = 0; i < capacity_ / 2; i++) {
         if (new_bucket[i] != nullptr && !new_bucket[i]->deleted) insert(new_bucket[i]->key, new_bucket[i]->value);
-    }
-
-    // CR: you can do it in previous for loop
-    for (int i = 0; i < capacity_ / 2; i++)
         if (new_bucket[i]) delete new_bucket[i];
+
+    }
 
     delete[] new_bucket;
 }
@@ -85,7 +85,6 @@ HashTable& HashTable::operator=(const HashTable& b) {
     return *this;
 }
 
-// CR: there are no tests for this method
 HashTable::HashTable(const HashTable& b) : capacity_(b.capacity_), size_(b.size_), bucket_(new Bucket* [b.capacity_]()) {
     for (int i = 0; i < capacity_; i++) {
         if (b.bucket_[i] != nullptr) {
@@ -134,27 +133,19 @@ bool HashTable::insert(const Key& k, const Value& v) {
     unsigned hash1 = hash_function1(k);
     unsigned hash2 = hash_function2(k);
 
+    int best_bucket = -1;
+
     for (int i = 0; i < capacity_; i++) {
-        if (bucket_[hash1] == nullptr) {
-            add_bucket(k, v, hash1);
+        if (bucket_[hash1] == nullptr) { 
+            add_bucket(k, v, best_bucket == -1 ? hash1 : best_bucket);
             return true;
         }
 
-        // CR: seems incorrect. consider following operations:
-        // CR: 1. insert foo with hash=h1 2. insert bar with hash=h1. it is inserted to (h1 + hash2) % capacity
-        // CR: 3. delete foo. now in position h1 we have bucket with deleted=true
-        // CR: 4. insert bar again. it will be inserted instead of foo (and now we have two foo entries)
-        // CR: please fix it and write a test
-        else if (bucket_[hash1]->deleted) {
-            delete bucket_[hash1];
-            add_bucket(k, v, hash1);
-            return true;
-        }
-
-        else if (k == bucket_[hash1]->key) {
+        else if (bucket_[hash1]->key == k) { 
             bucket_[hash1]->value = v;
             return false;
         }
+        else if (bucket_[hash1]->deleted == true && best_bucket == -1) best_bucket = hash1;
         hash1 = (hash1 + hash2) % capacity_;
     }
     assert(false);
@@ -168,20 +159,19 @@ bool HashTable::contains(const Key& k) const {
 Value& HashTable::operator[](const Key& k) {
     int index = search(k);
     if (index == -1) {
-        Value a("", 0);
+        Value v("", 0);
         unsigned hash1 = hash_function1(k);
 
-        for (int i = 0; i < capacity_;) {
-            if (bucket_[hash1] == nullptr) add_bucket(k, a, hash1);
+        int best_bucket = -1;
 
-            // CR: same problem as in insert
-            else if (bucket_[hash1]->deleted) {
-                delete bucket_[hash1];
-                add_bucket(k, a, hash1);
-                bucket_[hash1]->deleted = false;
+        for (int i = 0; i < capacity_; i++) {
+
+            if (bucket_[hash1] == nullptr) {
+                add_bucket(k, v, best_bucket == -1 ? hash1 : best_bucket);
+                return (bucket_[hash1]->value);
             }
-            return (bucket_[hash1]->value);
 
+            else if (bucket_[hash1]->deleted == true && best_bucket == -1) best_bucket = hash1;
         }
     }
 
