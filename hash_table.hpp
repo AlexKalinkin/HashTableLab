@@ -68,7 +68,6 @@ private:
     const static int DEFAULT_CAPACITY = 4;
     const static int FIRST_PRIME = 7;
     const static int SECOND_PRIME = 13;
-    int size_all_non_nullptr = 0;
     struct Bucket {
         Bucket(const Key& k, const Value& v, bool d = false) : key(k), value(v), deleted(d) {}
         Key key;
