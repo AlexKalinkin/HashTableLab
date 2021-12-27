@@ -7,6 +7,7 @@ TEST(HashTableTest, CheckInsertEqualFirstHash) {
     HashTable table;
     Value a("Alex", 20);
     // CR: 'qf' and '2f' have different hashes
+
     table.insert("2f", a);
     table.insert("qf", a);
     table.erase("2f");
