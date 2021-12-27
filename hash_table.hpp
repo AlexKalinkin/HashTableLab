@@ -62,6 +62,10 @@ public:
     // Otherwise returns true
     friend bool operator!=(const HashTable& a, const HashTable& b);
 
+    // Returns true if values equals (have the same name and age) 
+    // Otherwise returns false 
+    friend bool operator!=(Value& a, Value& b);
+
 private:
     int capacity_;
     int size_;

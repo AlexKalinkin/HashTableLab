@@ -3,7 +3,7 @@
 #include <ctime>
 #include <iostream>
 
-TEST(HashTableTest, CheckInsertEqualHash) {
+TEST(HashTableTest, CheckInsertEqualFirstHash) {
     HashTable table;
     Value a("Alex", 20);
     // CR: 'qf' and '2f' have different hashes
@@ -239,4 +239,22 @@ TEST(HashTableTest, CheckCopyCtor) {
     EXPECT_EQ(table1.size(), 3);
     HashTable table2 = table1;
     EXPECT_TRUE(table1 == table2);
+}
+
+TEST(HashTableTest, CheckNotEqualsForValues1) {
+    Value a("Bob", 20);
+    Value b("Bob", 40);
+    EXPECT_TRUE(a != b);
+}
+
+TEST(HashTableTest, CheckNotEqualsForValues2) {
+    Value a("Alex", 20);
+    Value b("Bob", 20);
+    EXPECT_TRUE(a != b);
+}
+
+TEST(HashTableTest, CheckNotEqualsForValues3) {
+    Value a("Alex", 20);
+    Value b("Bob", 40);
+    EXPECT_TRUE(a != b);
 }
