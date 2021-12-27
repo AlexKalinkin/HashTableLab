@@ -17,9 +17,6 @@ unsigned HashTable::hash_function1(const Key& k) const {
 unsigned HashTable::hash_function2(const Key& k) const {
     unsigned hash = hash_fun(SECOND_PRIME, k);
     if (hash % 2 != 0) return hash;
-    // CR: we have a problem when hash = capacity - 1
-    
-    // Ans: No problem because capacity is an even number
     return hash + 1;
 }
 
@@ -44,14 +41,15 @@ void HashTable::add_bucket(const Key& k, const Value& v, unsigned hash1) {
 
 void HashTable::resize() {
     capacity_ *= 2;
-    Bucket** new_bucket = new Bucket * [capacity_]();
+    Bucket** new_bucket = new Bucket *[capacity_]();
 
     size_ = 0;
     std::swap(bucket_, new_bucket);
     for (int i = 0; i < capacity_ / 2; i++) {
-        if (new_bucket[i] != nullptr && !new_bucket[i]->deleted) insert(new_bucket[i]->key, new_bucket[i]->value);
-        if (new_bucket[i]) delete new_bucket[i];
-
+        if (new_bucket[i]) {
+            if (!new_bucket[i]->deleted) insert(new_bucket[i]->key, new_bucket[i]->value);
+            delete new_bucket[i];
+        }
     }
 
     delete[] new_bucket;
@@ -145,7 +143,7 @@ bool HashTable::insert(const Key& k, const Value& v) {
             bucket_[hash1]->value = v;
             return false;
         }
-        else if (bucket_[hash1]->deleted == true && best_bucket == -1) best_bucket = hash1;
+        else if (bucket_[hash1]->deleted && best_bucket == -1) best_bucket = hash1;
         hash1 = (hash1 + hash2) % capacity_;
     }
     assert(false);
@@ -171,7 +169,7 @@ Value& HashTable::operator[](const Key& k) {
                 return (bucket_[hash1]->value);
             }
 
-            else if (bucket_[hash1]->deleted == true && best_bucket == -1) best_bucket = hash1;
+            else if (bucket_[hash1]->deleted && best_bucket == -1) best_bucket = hash1;
         }
     }
 
@@ -201,8 +199,8 @@ bool HashTable::empty() const {
 }
 
 bool operator!=(Value& a, Value& b) {
-    if (a.name == b.name && a.age == b.age) return false;
-    return true;
+    // CR: this method worked incorrectly, i fixed it. please write a test
+    return a.name != b.name || a.age != b.age;
 }
 
 bool operator==(const HashTable& a, const HashTable& b) {
